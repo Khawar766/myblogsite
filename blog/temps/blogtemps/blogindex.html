@@ -1,0 +1,60 @@
+{% extends 'blogtemps/designlayout.html' %}
+{% block title %}Blog-Home{% endblock title %}
+{% block blogactive %} active {% endblock blogactive %}
+{% block bodycontent %}
+{% load static %}
+{% csrf_token %}
+<div class="container ml-2">
+    <h2 class="mt-2">Here are the latest articals.</h2>
+    <div class="grid row g-5 mt-3">
+        <div class="col-md-8 ml-10 mr-1 px-2">
+            {% for items in mypost %}
+                <div class="col bg-slate-200">
+                    <div
+                        class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                        <div class="col-auto d-none d-lg-block">
+                            <img class="bd-placeholder-img" src="/media/{{items.thumbnail}}" width="100px"
+                                style="transform: rotate(40);" height="100px" xmlns="http://www.w3.org/2000/svg"
+                                role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice"
+                                focusable="false" />
+                        </div>
+                        <div class="col p-4 d-flex flex-column position-static">
+                            <h2><strong class="d-inline-block mb-1 text-primary">{{items.title}}</strong></h2>
+                            <div class="mb-1 text-body-secondary">{{items.time_stamp}}</div>
+                        </div>
+                        <div class="preview ml-4">
+                        <p class="card-text mb-auto">{{items.blog_content|safe|slice:"0:100"}}...</p></div>
+                        <a href="/blogpost/{{items.slug}}" class="stretched-link">Continue reading...</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col col-md-4 mr-0">
+            <div class="position-sticky" style="top: 2rem;">
+                <div class="mb-3 ">
+                    <button type="button" class="btn btn-outline-success mr-2" data-bs-toggle="modal"
+              data-bs-target="#Signupmodal">
+              SignUp Now if you haven't
+            </button>
+                </div>
+                <div class="p-4">
+                    <h4 class="fst-italic">Follow us on </h4>
+                    <ol class="list-unstyled">
+                        <li> <div class="fb-page" data-href="https://www.facebook.com/AKing003?mibextid=ZbWKwL" data-tabs="Follow us on facebook" data-width="" data-height="" data-small-header="true" data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="false"><blockquote cite="https://www.facebook.com/AKing003?mibextid=ZbWKwL" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/AKing003?mibextid=ZbWKwL">Swift Sparks</a></blockquote></div></li>
+                        <li><button class="fa btn fa-twitter mt-2 h-25 rounded-5 w-100 text-bg-DeepSkyBlue text-White"><a href="https://x.com/Swift_Sparks01?s=09" class="twitter-follow-button text-White" style="text-decoration: none;" data-show-count="false">&nbsp;&nbsp;&nbsp;Follow @SwiftSparks</a></button></li>
+                        <li><div class="g-ytsubscribe" data-channelid="UCnc_WxqFLi8TNILy3VsPj3Q" data-layout="full" data-theme="dark" data-count="hidden"></div></li>
+          </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock bodycontent %}
+{% block js %}
+<script>
+let previews = document.getElementsByClassName('preview');
+Array.from(previews).forEach((element)=>{
+element.innerHTML = element.innerText;
+});
+</script>
+{% endblock js %}

@@ -1,0 +1,39 @@
+{% extends 'blogtemps/designlayout.html' %}
+{% block title %}Contact Us{% endblock title %}
+{% block contactactive %} active {% endblock contactactive %}
+{% block bodycontent %}
+<div class="container">
+    <h1 class="mt-4 ml-5 text-xs">Contact Us</h1>
+    <p class=" mt-2 ml-5"> In case of any query contact us. We are here to help you</p>
+    <form method="post" action="/contact/">{% csrf_token %}
+        <div class="form-group mt-2">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Enter Your Name">
+        </div>
+        <div class="form-group mt-2">
+            <label for="name">Email</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter Your Email">
+        </div>
+        <div class="form-group mt-2">
+            <label for="name">Phome</label>
+            <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter Your Phone Number">
+        </div>
+        <div class="form-group mt-2">
+            <div class="form-group">
+                <label for="desc">How May We Help You ?</label>
+                <textarea class="form-control" id="desc" name="desc" rows="3"></textarea>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success mt-2 ml-3 text-black">Submit</button>
+    </form>
+</div>
+{% endblock bodycontent %}
+{% block js %}
+<script>
+    {% if thank %}
+    alert("Your application for contact has been sent. You will be contacted soon by email or call  ");
+    localStorage.clear();
+
+    {% endif %}
+</script>
+{% endblock js %}

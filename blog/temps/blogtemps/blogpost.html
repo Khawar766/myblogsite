@@ -1,0 +1,151 @@
+{% extends 'blogtemps/designlayout.html' %}
+{% block title %}Blog-Post{% endblock title %}
+{% block bodycontent %}{% load static %}
+{% csrf_token %}
+{% load humanize %}
+{% load extras %}
+<div class="container mb-5 pb-6">
+  <div class="grid row g-5 mt-1">
+    <div class="col col-md-8 ml-8">
+      <h3 class="pb-4 mb-4 fst-italic border-bottom">
+        {{post.title}}
+      </h3>
+      <p class="blog-post-meta">{{post.time_stamp}} <i><mark>{{post.auther}}</mark></i> (<span
+          style="font-size: 10px;">{{post.blog_views}} Views</span>)</p>
+      <div style="display:flex">
+        {% for tag in post.tags.all %}
+        <a href="{% url 'tagged' tag.slug %}" class=" mt-1 badge badge-info text-secondary" style="text-decoration: none;">#{{tag}}</a>
+        {% endfor %}
+      </div>
+      <div class="col-md-8">
+        <img src="/media/{{post.thumbnail}}" class="img-fluid img-responsive" width="100%" height="auto"  alt="thumbnail should be here">
+      </div>
+      <article class="blog-post">
+
+        <div class="ml-33">
+          <p class=" ml-4 mt-3">{{post.blog_content|safe}}</p>
+        </div>
+      </article>
+      
+      <div class="container mt-2">
+        <h1 class=" text-yellow-900 text-2xl font-extrabold font-serif">Comments & Replies &nbsp;({{comments.count}})</h1>
+        {% if request.user.is_authenticated %}
+        <form action="/postComment/" method="post">{% csrf_token %}
+          <div class="form-group">
+            <textarea class=" outline-double" name="comment" id="comment" cols="100" rows="5"
+              placeholder="Type your comment here"></textarea>
+            <input type="hidden" name="commentid" id="commentid" value="">
+            <input type="hidden" name="post_id" id="post_id" value="{{post.post_id}}">
+          </div>
+          <br>
+          <input type="submit" class="outline rounded-sm bg-amber-500 w-auto" value="Post Comment">
+        </form>
+        {% else %}
+        <h4>Please Login to post your comment.</h4>
+        {% endif %}
+        {% for comment in comments %}
+        <div class=" row my-3">
+          <div class="row">
+          <div class="col-md-1">
+            <img src="{% static '/images/user.png' %}" alt="pic" height="40px" width="40px" class=" rounded max-h-10 max-w-md">
+          </div>
+          <div class="col-md-11">
+            <p class=" font-extralight"> By
+              <i class="ml-0 font-bold text-ForestGreen">{{comment.user.username}}:</i>  <span style="font-size: x-small;"  class="bg-secondary text-white h-fit rounded-sm"> about {{comment.time_stamp|naturaltime}} </span>
+            </p>
+            <div class=" text-bg-LemonChiffon">{{comment.comment}}</div>
+            <div class="ml-2 reply">
+              {% if request.user.is_authenticated %}
+                <button class="btn btn-secondary text-black my-2 h-fit bg-slate-500 " type="button" data-bs-toggle="collapse" data-bs-target="#replybox{{comment.com_id}}" aria-expanded="false" aria-controls="replybox{{comment.com_id}}">
+                  Reply
+                </button> <br>
+              <div class="collapse" id="replybox{{comment.com_id}}">
+                <div class="card card-body visible">
+                  <form action="/postComment/" method="post">{% csrf_token %}
+                    <div class="form-group">
+                      <label for="comment">Post reply</label>
+                      <textarea class=" outline-double" name="comment" id="comment" cols="70" rows="5"
+                        placeholder="Type your comment here"></textarea>
+                        <input type="hidden" name="commentid" id="commentid" value="{{comment.com_id}}">
+                    </div>
+                    <input type="hidden" name="post_id" id="post_id" value="{{post.post_id}}">
+                    <br>
+                    <input type="submit" class="outline rounded-sm bg-amber-500 w-auto" value="Post Reply">
+                  </form>
+                </div>
+              </div>
+              {% else %}
+              <button class="btn btn-secondary text-black my-2 h-fit bg-slate-500 " type="button" data-bs-toggle="collapse" data-bs-target="#replybox{{comment.com_id}}" aria-expanded="false" disabled aria-controls="replybox{{comment.com_id}}">
+                Login to Reply
+              </button>
+              {% endif %}
+              <div class="replies bg-orange-100">
+                {% for comreply in repDict|get_val:comment.com_id %}
+                <div class=" grid row my-3 outline-dotted">
+                  <div class=" ml-1 mt-1 rounded ">
+                    <img src="{% static '/images/user.png' %}" alt="pic" height="40px" width="40px" class=" rounded-full max-h-10 max-w-md">
+                  </div>
+                  <div class="row-auto col-md-12">
+                    <p class=" font-extralight"> By
+                      <i class=" ml-0 font-bold text-ForestGreen">{{comreply.user.username}}:</i> <span style="font-size: x-small;" class=" bg-secondary text-light h-fit outline-dashed rounded-sm">about {{comreply.time_stamp|naturaltime}}</span> 
+                    </p>
+                    <div class="text-bg-LightYellow">{{comreply.comment}}</div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        </div>
+        {% endfor %}
+
+      </div><br>
+
+      <nav class="blog-pagination" aria-label="Pagination">
+        <a class="btn btn-outline-primary rounded-pill" href="#">Back to top</a>
+      </nav>
+    </div>
+    <div class="col col-md-4">
+      <div style="top: 2rem;">
+        <div class="p-4 mb-3 bg-body-tertiary rounded">
+          <h6 class="fst-italic">ads</h6>
+        </div>
+        <div class=" p-5">
+          <h5 class="fst-italic">You may like this also</h5>
+          <div class="h-100 p-5 text-bg-dark rounded-3">
+            {% for items in similar_post|slice:':5'  %}  
+            <div class=" p-4 text-body">
+              <h4 class="text-white font-bold text-xl">{{items.title}}</h4>
+              <div class="previews mt-1 text-white">
+                <p class=" text-white">{{items.blog_content|safe|slice:'0:70'}}...</p>
+              </div>
+              <button class="btn btn-outline-light mt-2" type="button"><a href="/blogpost/<items.slug>" class="gotoblog"
+                  style="text-decoration: none; text-decoration-color: aliceblue;"> Go to Blog </a></button>
+            </div>
+            {% if forloop.counter|divisibleby:2 and forloop.counter > 0 and not forloop.last %}
+          </div>
+          <div class="h-100 p-5 text-bg-dark rounded-3">
+              {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="p-4">
+          <div class="fb-like" data-href="https://localhost/" data-width="" data-layout="" data-action="" data-size="" data-share="true"></div>
+        </div>
+        <div class="p-4">
+          <h4 class="fst-italic">Follow us on </h4>
+          <ol class="list-unstyled">
+              <li> <div class="fb-page" data-href="https://www.facebook.com/AKing003?mibextid=ZbWKwL" data-tabs="Follow us on facebook" data-width="" data-height="" data-small-header="true" data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="false"><blockquote cite="https://www.facebook.com/AKing003?mibextid=ZbWKwL" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/AKing003?mibextid=ZbWKwL">Swift Sparks</a></blockquote></div></li>
+              <li><button class="fa btn fa-twitter mt-2 h-25 rounded-5 w-80 text-bg-DeepSkyBlue text-White"><a href="https://x.com/Swift_Sparks01?s=09" class="twitter-follow-button text-White"  data-show-count="false" style="text-decoration: none;" data-size="large">&nbsp;&nbsp;Follow @SwiftSparks</a></button></li>
+              <li><button class="btn w-100"><div class="g-ytsubscribe" data-channelid="UCnc_WxqFLi8TNILy3VsPj3Q" data-layout="full" data-theme="dark" data-count="hidden"></div></button></li>
+          </ol>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock bodycontent %}

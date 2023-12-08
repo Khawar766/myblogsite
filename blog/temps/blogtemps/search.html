@@ -1,0 +1,54 @@
+{% extends 'blogtemps/designlayout.html' %}
+{% block title %}search{% endblock title %}
+{% block homeactive %} active {% endblock homeactive %}
+{% block bodycontent %} {% csrf_token %}
+{% load static %}
+<div class="container">
+    <h4 class=" mt-4 mx-9">You search result</h4>
+    {% if found_data|length < 1 %} <div class=" mt-4 p-20">
+        <strong class=""> Not search result</strong><br>
+        <p>Your search: {{query}}--did not match any document </p><br>
+        <h6>Suggession:</h6>
+        <ul>
+            <li>
+                Try different key words.
+            </li>
+            <li>
+                Try more general key words.
+            </li>
+            <li>
+                Try fewer key words.
+            </li>
+            <li>
+                Make sure that all words are spelled correctly.
+            </li>
+        </ul>
+</div>
+{% endif %}
+
+<div class="container">
+    <div class="mb-2 mt-4">
+        {% for items in found_data %}
+        <div class="col-md-6">
+            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                <div class="col p-4 d-flex flex-column position-static">
+                    <strong class="d-inline-block mb-2 text-primary">
+                        <h3 class="mb-0">{{items.title}}</h3>
+                    </strong>
+                    <div class="mb-1 text-body-secondary"><strong>{{items.time_stamp}}</strong></div>
+                    <p class="card-text mb-auto">{{items.blog_content|slice:'0:300'}}</p>
+                    <a href="/blogpost/{{items.slug}}" class="stretched-link">Continue reading</a>
+                </div>
+                <div class="col-auto d-none d-lg-block">
+                    <img class="bd-placeholder-img" src="/media/{{items.thumbnail}}" width="200" height="250"
+                        xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
+                        preserveAspectRatio="xMidYMid slice" alt="thumnail should be here" focusable="false" />
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    </div>
+</div>
+{% endblock bodycontent %}

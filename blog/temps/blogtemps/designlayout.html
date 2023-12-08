@@ -1,0 +1,191 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:url" content="https://janowski.dev/blog/2020/04/05/Intresting-article" />
+    <meta property="og:title" content="Intresting Article" />
+    <meta property="og:image" content="https://janowski.dev/static/cover.png" />
+    <meta property="og:image:alt" content="A green cover image with Django logo" />
+    <title>{% block title %}Design page{% endblock title %}</title>
+    <link rel="stylesheet" href="{% static 'custom.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v18.0" nonce="s5mGobkj"></script>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v18.0" nonce="mhUbXOL0"></script>
+    <script src="https://apis.google.com/js/platform.js"></script>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    
+ 
+    </head>
+
+  <body>
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark text-white">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">SwiftSparks News</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class=" navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item ">
+                <a class="nav-link {% block homeactive %} {% endblock homeactive %}" aria-current="page"
+                  href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {% block blogactive %} {% endblock blogactive %}" href="/blog/">Articles</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {% block contactactive %} {% endblock contactactive %}" href="/contact/">Contact
+                  Us</a>
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link {% block aboutactive %} {% endblock aboutactive %}" href="/about/">About US</a>
+              </li>
+            </ul>
+            <form method="get" action="/search/" class="d-flex" role="search">
+              <input name="searchbox" id='searchbox' class="form-control me-2" type="search" placeholder="Search"
+                aria-label="Search">
+              <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+            {% if user.is_authenticated %}
+            <div class="dropdown  mx-1">
+              <button class="btn btn-outline-success dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Welcome {{request.user}}
+              </button>
+              <ul class="dropdown-menu ">
+                <li><a class="dropdown-item" href="/logout/">Logout</a></li>
+              </ul>
+            </div>
+            {% else %}
+            <!-- Button trigger for Login modal -->
+            <button type="button" class="btn btn-outline-success mx-2" data-bs-toggle="modal"
+              data-bs-target="#Loginmodal">
+              Login
+            </button>
+            <!-- Button trigger for Signup modal -->
+            <button type="button" class="btn btn-outline-success mr-2" data-bs-toggle="modal"
+              data-bs-target="#Signupmodal">
+              SignUp
+            </button>
+            {% endif %}
+          </div>
+        </div>
+      </nav>
+      <!-- Signup Modal -->
+    <div class="modal fade" id="Signupmodal" tabindex="-1" aria-labelledby="SignupeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="SignupModalLabel">Fill to Signup</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form action="signup/" method="post">{% csrf_token %}
+                <div class="mb-3 from-group">
+                  <label for="username" class="form-label">User Name:</label>
+                  <input type="text" class="form-control" name="username" id="username" placeholder="Enter your username"
+                    required>
+                </div>
+                <div class="mb-3 from-group">
+                  <label for="fname" class="form-label">First Name:</label>
+                  <input type="text" class="form-control" name="fname" id="fname" placeholder="Enter your first name"
+                    required>
+                </div>
+                <div class="mb-3 from-group">
+                  <label for="lname" class="form-label">Last Name:</label>
+                  <input type="text" class="form-control" name="lname" id="lname" placeholder="Enter your last name"
+                    required>
+                </div>
+                <div class="mb-3 from-group">
+                  <label for="email" class="form-label">Email address:</label>
+                  <input type="email" class="form-control" name="email" id="email" placeholder="name@example.com"
+                    required>
+                </div>
+                <div class="mb-3 from-group">
+                  <label for="password" class="form-label">password:</label>
+                  <input type="password" class="form-control" name="password" id="password"
+                    placeholder="Type password here" required>
+                </div>
+                <div class="mb-3 from-group">
+                  <label for="confirmpassword" class="form-label">Confirm Password:</label>
+                  <input type="password" class="form-control" name="confirmpassword" id="confirmpassword"
+                    placeholder="Re-type password" required>
+                </div>
+                <button type="submit" class="btn btn-primary text-dark">Submit to Signup</button>
+              </form>
+            </div>
+            <p class=" mt-3 align-middle"><strong>-- Or --</strong></p>
+            <a href="{% url 'social:begin' 'facebook' %}" class=" mx-3 btn text-light " style="background-color: #3B5998;"><i class="fab fa-facebook-f light"></i> Signup with Facebook</a>
+            <div class="modal-footer">
+            </div>
+          </div>
+        </div>
+      </div>
+  
+  
+      <!-- Login Modal -->
+      <div class="modal fade" id="Loginmodal" tabindex="-1" aria-labelledby="LoginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="LoginLabel">Login</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form action="/login/" method="post"> {% csrf_token %}
+                <div class="mb-3 from-group">
+                  <label for="loginusername" class="form-label">User name</label>
+                  <input type="text" class="form-control" name="loginusername" id="loginusername" required>
+                </div>
+                <div class="mb-3 from-group">
+                  <label for="loginpassword" class="form-label">password</label>
+                  <input type="password" class="form-control" name="loginpassword" id="loginpassword"
+                    placeholder="Enter password" required>
+                </div>
+  
+                <button type="submit" class="btn btn-primary text-dark">Login </button>
+              </form>
+            </div>
+            <p class=" mx-6"><strong>-- Or --</strong></p>
+            <a href="{% url 'social:begin' 'facebook' %}" class="mx-3 btn text-light" style="background-color: #3B5998;"><i class="fab fa-facebook-f"></i> Login with Facebook</a>
+            <div class="modal-footer">
+            <div class="modal-footer">
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+      <strong>Message:</strong> {{message}}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    
+    {% block bodycontent %}
+    <strong>This text is from the layout page. The selected page does not conatain any data.<br>
+    </strong>
+    {% endblock bodycontent %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v18.0" nonce="s5mGobkj"></script>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v18.0" nonce="mhUbXOL0"></script>
+    <script src="https://apis.google.com/js/platform.js"></script>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    {% block js %}
+
+    {% endblock js %}
+  </body>
+
+</html>

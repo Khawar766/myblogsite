@@ -1,0 +1,61 @@
+{% extends 'blogtemps/designlayout.html' %}
+{% block title %}Home-blogpoint{% endblock title %}
+{% block homeactive %} active {% endblock homeactive %}
+{% block bodycontent %}{% load static %}
+{% csrf_token %}
+
+<div class="container mt-4 px-5">
+    <div class="h-100 p-5 text-bg-dark rounded-3">
+        {% for items in post|slice:':1' %}
+        <div class=" p-4 text-body">
+            <h2 class="text-white font-bold text-xl">{{items.title}}</h2>
+            <div class="previews mt-1 text-white">
+                <p class=" text-white">{{items.blog_content|safe|slice:'0:350'}}...</p>
+            </div>
+            <button class="btn btn-outline-light mt-2" type="button"><a href="/blog/" class="gotoblog"
+                    style="text-decoration: none; text-decoration-color: aliceblue;"> Go to Blog </a></button>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="row">
+        <div class="row mb-2 mt-4">
+            {% for items in post|slice:':7' %}
+            <div class="col-md-8">
+                <div
+                    class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                    <div class="col p-4 d-flex flex-column position-static">
+                        <strong class="d-inline-block mb-2 text-primary">
+                            <h3 class="mb-0">{{items.title}}</h3>
+                        </strong>
+
+                        <div class="mb-1 text-body-secondary"><strong>{{items.time_stamp}}</strong></div>
+                        <div class="previews">
+                            <p class="card-text mb-auto">{{items.blog_content|safe|slice:'0:150'}}</p>
+                        </div>
+                        <a href="/blogpost/{{items.slug}}" class="stretched-link text-blue-600">Continue
+                            reading...</a>
+                    </div>
+                    <div class="col-auto d-none d-lg-block">
+                        <img class="bd-placeholder-img" src="/media/{{items.thumbnail}}" width="200" height="250"
+                            xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
+                            preserveAspectRatio="xMidYMid slice" alt="thumnail should be here" focusable="false" />
+                    </div>
+                </div>
+            </div>
+            {% if forloop.counter|divisibleby:2 and forloop.counter > 0 and not forloop.last %}
+        </div>
+        <div class="row mb-2 mx-2 pr-4">
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock bodycontent %}
+{% block js %}
+<script>
+    let previews = document.getElementsByClassName('preview');
+    Array.from(previews).forEach((element) => {
+        element.innerHTML = element.innerText;
+    });
+</script>
+{% endblock js %}
