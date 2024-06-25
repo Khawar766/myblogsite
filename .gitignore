@@ -3,10 +3,8 @@
 node_modules/
 local-cdn
 db.sqlite3
-vercel.json
 =======
 /node_modules/*
 local-cdn
 db.sqlite3
-vercel.json
 >>>>>>> 9d2eebe820c2fb9b18591bf9d8a55632738a716d
