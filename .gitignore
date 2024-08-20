@@ -1,10 +1,4 @@
-
-<<<<<<< HEAD
-node_modules/
-local-cdn
-db.sqlite3
-=======
 /node_modules/*
 local-cdn
 db.sqlite3
->>>>>>> 9d2eebe820c2fb9b18591bf9d8a55632738a716d
+.env

@@ -92,6 +92,18 @@ AUTHENTICATION_BACKENDS = (
     'social_core.backends.github.GithubOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
+DATABASES = {
+    'default': {
+        # 'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME'),# Replace with your database name
+        'USER': config('DB_USER'),           # Replace with your database user
+        'PASSWORD': config('DB_PASSWORD'),   # Replace with your database password
+        'HOST': config('DB_HOST'),        # Set to your PostgreSQL host
+        'PORT': config('DB_PORT'),  # Default PostgreSQL port
+        'CA_CERTIFICATE':config('CA_CERTIFICATE'),
+        'sslmode':'required'
+    }
+}
 
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
@@ -165,13 +177,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SOCIAL_AUTH_FACEBOOK_KEY = config('SOCIAL_AUTH_FACEBOOK_KEY')
 SOCIAL_AUTH_FACEBOOK_SECRET = config('SOCIAL_AUTH_FACEBOOK_SECRET')
 
-
-# AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
-# AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
-# AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
-# AWS_S3_SIGNATURE_NAME = config('Bucket_Signature')
-# AWS_S3_REGION_NAME = config('AWS_S3_REGION_NAME')
-# AWS_S3_FILE_OVERWRITE = False
-# AWS_DEFAULT_ACL =  None
-# AWS_S3_VERITY = True
 DEFAULT_FILE_STORAGE =config('DEFAULT_FILE_STORAGE')
